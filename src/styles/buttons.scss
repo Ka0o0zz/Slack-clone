@@ -1,0 +1,27 @@
+.buttons {
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.2857;
+    letter-spacing: .8px;
+    font-size: .875rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+
+    &.principal {
+        @apply text-fuchsia-900;
+        background: #fff;
+    }
+
+    &.second {
+        color: #fff;
+        border: solid 1.7px #fff;
+    }
+
+    &.widthFull {
+        display: inline-block;
+        width: 100%;
+        padding: 1rem 1rem;
+    }
+}
