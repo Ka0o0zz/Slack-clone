@@ -43,5 +43,4 @@ export default NextAuth({
     }),
   ],
   secret: SECRET_NEXTAUTH,
-  
 });

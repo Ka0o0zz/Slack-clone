@@ -24,6 +24,8 @@ export async function getServerSideProps({
 }) {
   const session = await getSession({ req });
 
+  console.log({ session });
+
   if (!session)
     return {
       redirect: {
