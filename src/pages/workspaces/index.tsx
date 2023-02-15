@@ -1,6 +1,7 @@
-import { useSession, signOut, getSession } from "next-auth/react";
-import http from "http";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default function SignInUser() {
   const { data: session } = useSession();
@@ -19,14 +20,16 @@ export default function SignInUser() {
 
 export async function getServerSideProps({
   req,
+  res,
 }: {
-  req: http.IncomingMessage;
+  req: NextApiRequest;
+  res: NextApiResponse<any>;
 }) {
-  const session = await getSession({ req });
+  const session = await getServerSession(req, res, {});
 
   console.log({ session });
 
-  if (session)
+  if (!session)
     return {
       redirect: {
         destination: "/",
