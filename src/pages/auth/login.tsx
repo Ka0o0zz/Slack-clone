@@ -4,8 +4,14 @@ import { Button, Divider, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
 
 export default function Login() {
-  const singInWithGoogle = () => {
-    signIn("google", { callbackUrl: "http://localhost:3000/workspaces" });
+  const singInUser = ({
+    redirectProvider,
+  }: {
+    redirectProvider: "google" | "github";
+  }) => {
+    signIn(redirectProvider, {
+      callbackUrl: "http://localhost:3000/workspaces",
+    });
   };
   return (
     <>
@@ -32,7 +38,7 @@ export default function Login() {
             text="Sign In With Google"
             src="/assets/googleIcon.svg"
             alt="google icon"
-            onClick={singInWithGoogle}
+            onClick={() => singInUser({ redirectProvider: "google" })}
             className="text-sky-600 border-sky-600 mb-4"
           />
 
@@ -40,6 +46,7 @@ export default function Login() {
             text="Sign In With Github"
             src="/assets/githubIcon.svg"
             alt="github icon"
+            onClick={() => singInUser({ redirectProvider: "github" })}
             className="text-slate-900 border-slate-900"
           />
 
