@@ -43,10 +43,5 @@ export default NextAuth({
     }),
   ],
   secret: SECRET_NEXTAUTH,
-  callbacks: {
-    session: async ({ session, user }: any) => {
-      session.userId = user.sub;
-      return Promise.resolve(session);
-    },
-  },
+  
 });
