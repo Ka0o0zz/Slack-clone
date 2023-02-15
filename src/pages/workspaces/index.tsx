@@ -21,13 +21,7 @@ export default function SignInUser() {
 export async function getServerSideProps({ req }: { req: NextApiRequest }) {
   const session = await getServerSession(req);
 
-  if (!session)
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+  
 
   return {
     props: {
