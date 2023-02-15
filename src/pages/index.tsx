@@ -32,4 +32,8 @@ export async function getServerSideProps({ req }: { req: NextApiRequest }) {
         permanent: true,
       },
     };
+
+  return {
+    props: {},
+  };
 }
