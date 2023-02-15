@@ -1,10 +1,16 @@
 import Image from "next/image";
 import { AnchorButton } from "./AnchorButton";
 
-const titleNav = ["Product", "Solution", "Enterprise", "Resources", "Price"];
+const listItemsNav = [
+  "Product",
+  "Solution",
+  "Enterprise",
+  "Resources",
+  "Price",
+];
 
-const liMap = ({ title }: { title: string }) => {
-  return <li key={`${title}-key-list-header`}>{title}</li>;
+const liMap = ({ text }: { text: string }) => {
+  return <li key={`${text}-key-list-header`}>{text}</li>;
 };
 
 export const Header = () => {
@@ -12,7 +18,7 @@ export const Header = () => {
     <header className="w-full bg-fuchsia-900 py-5 flex fixed top-0 left-0 right-0 px-36">
       <div className="mr-5 flex items-center">
         <Image
-          src={"assets/slackLogo.svg"}
+          src={"assets/slackLogoWhite.svg"}
           alt="logo"
           width={110}
           height={30}
@@ -20,7 +26,7 @@ export const Header = () => {
       </div>
       <nav className="flex items-center justify-start flex-1">
         <ul className="flex gap-10 text-white font-medium text-base items-center justify-start flex-1">
-          {titleNav.map((title: string) => liMap({ title }))}
+          {listItemsNav.map((text: string) => liMap({ text }))}
         </ul>
         <div className="flex gap-x-5">
           <AnchorButton href={"/"} className="buttons second">
