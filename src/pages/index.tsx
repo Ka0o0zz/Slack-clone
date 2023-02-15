@@ -1,4 +1,6 @@
 import { HomePageLayout } from "@layout/index";
+import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import Head from "next/head";
 
 export default function Home(): JSX.Element {
@@ -15,4 +17,27 @@ export default function Home(): JSX.Element {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse<any>;
+}) {
+  const session = await getServerSession(req, res, {});
+
+  if (session)
+    return {
+      redirect: {
+        destination: "/workspace",
+      },
+    };
+
+  return {
+    props: {
+      session,
+    },
+  };
 }
