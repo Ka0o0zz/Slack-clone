@@ -31,7 +31,7 @@ export async function getServerSideProps({
   if (session)
     return {
       redirect: {
-        destination: "/workspace",
+        destination: "/workspaces",
       },
     };
 
