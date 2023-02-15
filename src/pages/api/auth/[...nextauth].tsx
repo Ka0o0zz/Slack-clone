@@ -8,6 +8,8 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE__CLIENT__SECRET || "";
 const GITHUB_CLIENT_ID = process.env.GITHUB__CLIENT__ID || "";
 const GITHUB_CLIENT_SECRET = process.env.GITHUB__CLIENT__SECRET || "";
 
+const SECRET_NEXTAUTH = process.env.SECRET__NEXTAUTH || "";
+
 console.log({
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
@@ -40,4 +42,11 @@ export default NextAuth({
       },
     }),
   ],
+  secret: SECRET_NEXTAUTH,
+  callbacks: {
+    session: async ({ session, user }: any) => {
+      session.userId = user.sub;
+      return Promise.resolve(session);
+    },
+  },
 });
