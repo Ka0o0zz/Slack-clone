@@ -1,7 +1,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 
 export default function SignInUser() {
   const { data: session } = useSession();
@@ -18,16 +18,8 @@ export default function SignInUser() {
   );
 }
 
-export async function getServerSideProps({
-  req,
-  res,
-}: {
-  req: NextApiRequest;
-  res: NextApiResponse<any>;
-}) {
-  const session = await getServerSession(req, res, {});
-
-  console.log({ session });
+export async function getServerSideProps({ req }: { req: NextApiRequest }) {
+  const session = await getServerSession(req);
 
   if (!session)
     return {
