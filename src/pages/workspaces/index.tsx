@@ -26,7 +26,7 @@ export async function getServerSideProps({
 
   console.log({ session });
 
-  if (!session)
+  if (session)
     return {
       redirect: {
         destination: "/",
