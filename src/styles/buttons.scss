@@ -25,3 +25,24 @@
         padding: 1rem 1rem;
     }
 }
+
+input {
+    &.error {
+        border-color: #e01e5a;
+        border-width: 0.5px;
+    }
+}
+
+.item-error {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #e01e5a;
+    background: #fce8ee;
+    display: flex;
+    align-items: center;
+
+    svg {
+        fill: #e01e5a;
+        margin-right: 15px;
+    }
+}

@@ -2,8 +2,21 @@ import Head from "next/head";
 import { signIn } from "next-auth/react";
 import { Button, Divider, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface IFormInputs {
+  email: string;
+  password: string;
+}
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInputs>();
+  const onSubmit: SubmitHandler<IFormInputs> = (data) => console.log(data);
+
   const singInUser = ({
     redirectProvider,
   }: {
@@ -13,6 +26,7 @@ export default function Login() {
       callbackUrl: "http://localhost:3000/workspaces",
     });
   };
+
   return (
     <>
       <Head>
@@ -33,7 +47,7 @@ export default function Login() {
         pRecording="New to slack?"
         linkText="Create an account"
       >
-        <form className="w-96">
+        <form className="w-96" onSubmit={handleSubmit(onSubmit)}>
           <Button
             text="Sign In With Google"
             src="/assets/googleIcon.svg"
@@ -54,15 +68,28 @@ export default function Login() {
 
           <Input
             type="email"
-            name="email"
             placeholder="name@slack.com"
             className="mb-4"
+            error={errors.email ? true : false}
+            errorMessage={errors.email?.message}
+            {...register("email", {
+              required: "Please fill in your email.",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Invalid email address",
+              },
+            })}
           />
+
           <Input
             type="password"
-            name="password"
-            placeholder="password"
             className="mb-4"
+            placeholder="password"
+            error={errors.password ? true : false}
+            errorMessage={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+            })}
           />
 
           <Button

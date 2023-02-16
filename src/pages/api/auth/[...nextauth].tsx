@@ -10,13 +10,6 @@ const GITHUB_CLIENT_SECRET = process.env.GITHUB__CLIENT__SECRET || "";
 
 const SECRET_NEXTAUTH = process.env.SECRET__NEXTAUTH || "";
 
-console.log({
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET,
-});
-
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -51,8 +44,6 @@ export default NextAuth({
       return baseUrl;
     },
     async session({ session, user, token }) {
-      console.log({ session, user, token });
-
       return session;
     },
     async jwt({ token, user, account, profile, isNewUser }) {

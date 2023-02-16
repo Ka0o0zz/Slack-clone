@@ -1,8 +1,22 @@
 import { Button, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
 import Head from "next/head";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-export default function register() {
+interface IFormInputs {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export default function Register() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<IFormInputs>();
+  const onSubmit: SubmitHandler<IFormInputs> = (data) => console.log(data);
   return (
     <>
       <Head>
@@ -23,26 +37,44 @@ export default function register() {
         pRecording="Already using Slack?"
         linkText="Sign in to an existing workspace"
       >
-        <form className="w-96">
+        <form className="w-96" onSubmit={handleSubmit(onSubmit)}>
           <Input
             type="email"
-            name="email"
             placeholder="name@slack.com"
             className="mb-4"
+            error={errors.email ? true : false}
+            errorMessage={errors.email?.message}
+            {...register("email", {
+              required: "Please fill in your email.",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Invalid email address",
+              },
+            })}
           />
 
           <Input
             type="password"
-            name="password"
-            placeholder="password"
             className="mb-4"
+            placeholder="password"
+            error={errors.password ? true : false}
+            errorMessage={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+            })}
           />
 
           <Input
             type="password"
-            name="confirmPassword"
             placeholder="confirm password"
             className="mb-4"
+            error={errors.confirmPassword ? true : false}
+            errorMessage={errors.confirmPassword?.message}
+            {...register("confirmPassword", {
+              required: "Password is required",
+              validate: (value) =>
+                value === getValues("password") || "Passwords do not match",
+            })}
           />
 
           <Button
