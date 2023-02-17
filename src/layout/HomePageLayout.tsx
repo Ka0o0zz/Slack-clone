@@ -1,5 +1,9 @@
 import { Header, AnchorButton } from "@components/index";
 
+/**
+ * @returns layout component that displays the content of the home page.
+ * Provides a standardized layout for the page.
+ */
 export const HomePageLayout = () => {
   return (
     <main className="w-10/12 h-screen m-auto bg-fuchsia-900 grid place-content-center">

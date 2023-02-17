@@ -3,30 +3,63 @@ import { signIn } from "next-auth/react";
 import { Button, Divider, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { inputsErrors } from "@helpers/index";
 
+/**
+ * Define the types for the form inputs
+ */
 interface IFormInputs {
   email: string;
   password: string;
 }
 
+/**
+ * Define the Login component as the default export
+ */
 export default function Login() {
+  /**
+   * Initialize the useForm hook and extract the necessary properties
+   */
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInputs>();
-  const onSubmit: SubmitHandler<IFormInputs> = (data) => console.log(data);
 
+  /**
+   * Get a custom error validation function from an external helper file
+   */
+  const { emailValidate } = inputsErrors();
+
+  /**
+   * Function to handle form submission
+   *
+   * @param {IFormInputs} data - Form data to be submitted
+   * @returns {void}
+   */
+  const onSubmit: SubmitHandler<IFormInputs> = (data: IFormInputs): void =>
+    console.log(data);
+
+  /**
+   * Define a function to handle user sign-in using either Google or GitHub
+   *
+   * @param {object} options - The options for the sign-in.
+   * @param {("google"|"github")} options.redirectProvider - The provider to use for sign-in.
+   * @returns {void}
+   */
   const singInUser = ({
     redirectProvider,
   }: {
     redirectProvider: "google" | "github";
-  }) => {
+  }): void => {
     signIn(redirectProvider, {
       callbackUrl: "http://localhost:3000/workspaces",
     });
   };
 
+  /**
+   * @returns the JSX for the Login component
+   */
   return (
     <>
       <Head>
@@ -72,13 +105,7 @@ export default function Login() {
             className="mb-4"
             error={errors.email ? true : false}
             errorMessage={errors.email?.message}
-            {...register("email", {
-              required: "Please fill in your email.",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Invalid email address",
-              },
-            })}
+            {...register("email", emailValidate)}
           />
 
           <Input

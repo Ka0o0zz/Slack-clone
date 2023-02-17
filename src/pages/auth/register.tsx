@@ -1,22 +1,54 @@
+/**
+ * @module Register
+ * @description This component renders a registration form for new users to sign up for Slack.
+ * @default
+ */
+
 import { Button, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
 import Head from "next/head";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { inputsErrors } from "src/helpers";
 
+/**
+ * Interface for the form inputs.
+ */
 interface IFormInputs {
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-export default function Register() {
+/**
+ * Component for the register page.
+ *
+ * @returns {JSX.Element} The JSX element that represents the register page.
+ */
+export default function Register(): JSX.Element {
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
   } = useForm<IFormInputs>();
-  const onSubmit: SubmitHandler<IFormInputs> = (data) => console.log(data);
+
+  /**
+   * @constant
+   * @type {Object}
+   * @property {Function} emailValidate - A function to validate the user's email.
+   * @property {Function} passwordValidate - A function to validate the user's password.
+   * @property {Function} passwordMatch - A function to validate that the user's passwords match.
+   */
+  const { emailValidate, passwordValidate, passwordMatch } = inputsErrors();
+
+  /**
+   * Handles form submission.
+   * @function
+   * @param {IFormInputs} data - The form data submitted by the user.
+   * @returns {void}
+   */
+  const onSubmit: SubmitHandler<IFormInputs> = (data: IFormInputs): void =>
+    console.log(data);
   return (
     <>
       <Head>
@@ -44,13 +76,7 @@ export default function Register() {
             className="mb-4"
             error={errors.email ? true : false}
             errorMessage={errors.email?.message}
-            {...register("email", {
-              required: "Please fill in your email.",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Invalid email address",
-              },
-            })}
+            {...register("email", emailValidate)}
           />
 
           <Input
@@ -59,9 +85,7 @@ export default function Register() {
             placeholder="password"
             error={errors.password ? true : false}
             errorMessage={errors.password?.message}
-            {...register("password", {
-              required: "Password is required",
-            })}
+            {...register("password", passwordValidate)}
           />
 
           <Input
@@ -70,11 +94,10 @@ export default function Register() {
             className="mb-4"
             error={errors.confirmPassword ? true : false}
             errorMessage={errors.confirmPassword?.message}
-            {...register("confirmPassword", {
-              required: "Password is required",
-              validate: (value) =>
-                value === getValues("password") || "Passwords do not match",
-            })}
+            {...register(
+              "confirmPassword",
+              passwordMatch(getValues("password"))
+            )}
           />
 
           <Button
