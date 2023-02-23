@@ -4,6 +4,7 @@ import { Button, Divider, Input } from "@components/index";
 import { AuthLayout } from "@layout/index";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { inputsErrors } from "@helpers/index";
+import { useRouter } from "next/router";
 
 /**
  * Define the types for the form inputs
@@ -17,6 +18,8 @@ interface IFormInputs {
  * Define the Login component as the default export
  */
 export default function Login() {
+  // Initialize useRouter hook
+  const router = useRouter();
   /**
    * Initialize the useForm hook and extract the necessary properties
    */
@@ -32,13 +35,23 @@ export default function Login() {
   const { emailValidate } = inputsErrors();
 
   /**
-   * Function to handle form submission
-   *
-   * @param {IFormInputs} data - Form data to be submitted
-   * @returns {void}
+   * Handles the submission of the login form.
+   * @param {IFormInputs} data - Form data to be submitted.
+   * @returns {Promise<void>} A promise that resolves when the form is successfully submitted.
    */
-  const onSubmit: SubmitHandler<IFormInputs> = (data: IFormInputs): void =>
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInputs> = async ({
+    email,
+    password,
+  }: IFormInputs) => {
+    const signInResponse = await signIn("credentials", {
+      redirect: false,
+      email: email,
+      password: password,
+      callbackUrl: "/",
+    });
+
+    if (signInResponse?.ok) router.push(signInResponse.url ?? "/auth/login");
+  };
 
   /**
    * Define a function to handle user sign-in using either Google or GitHub

@@ -1,7 +1,16 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import CredentialProvider from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
+import {
+  collection,
+  getDocs,
+  limit,
+  query,
+  where,
+} from "firebase/firestore/lite";
+import { db } from "src/firebase";
+import { compare } from "bcryptjs";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE__CLIENT__ID || "";
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE__CLIENT__SECRET || "";
@@ -10,6 +19,8 @@ const GITHUB_CLIENT_ID = process.env.GITHUB__CLIENT__ID || "";
 const GITHUB_CLIENT_SECRET = process.env.GITHUB__CLIENT__SECRET || "";
 
 const SECRET_NEXTAUTH = process.env.SECRET__NEXTAUTH || "";
+
+const usersCollection = collection(db, "users");
 
 export default NextAuth({
   /**
@@ -42,6 +53,49 @@ export default NextAuth({
           access_type: "offline",
           response_type: "code",
         },
+      },
+    }),
+    CredentialsProvider({
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        if (!credentials) {
+          throw new Error("Credentials not provided");
+        }
+
+        const { email, password } = credentials;
+
+        try {
+          const q = query(
+            usersCollection,
+            where("email", "==", email),
+            limit(1)
+          );
+          const querySnapshot = await getDocs(q);
+
+          const result = querySnapshot.docs.map((doc) => doc.data());
+
+          if (result.length <= 0) {
+            throw new Error("No user Found with Email Please Sign Up...!");
+          }
+
+          const checkPassword = await compare(password, result[0].password);
+
+          if (!checkPassword || result[0].email !== email) {
+            throw new Error("Username or Password doesn't match");
+          }
+
+          const user = {
+            id: "2122232323",
+            email: result[0].email,
+          };
+
+          return user;
+        } catch (error) {
+          return null;
+        }
       },
     }),
   ],
@@ -86,7 +140,7 @@ export default NextAuth({
      */
     async redirect({ url, baseUrl }) {
       console.log({ baseUrl });
-      return baseUrl;
+      return `${baseUrl}/workspaces`;
     },
 
     /**
